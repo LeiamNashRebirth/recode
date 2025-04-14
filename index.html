@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LeiamNash</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/dracula.min.css" />
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #1e1e1e;
+      font-family: "Fira Code", monospace;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    #editor {
+      flex-grow: 1;
+      overflow: hidden;
+    }
+
+    .CodeMirror {
+      height: 100%;
+      font-size: 14px;
+      background: #1e1e1e;
+      color: #ffffff;
+    }
+
+    .buttons {
+      background-color: #252526;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .btn {
+      background: #007acc;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 14px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 5px;
+    }
+
+    .btn:hover {
+      background: #005a9e;
+    }
+
+    @media (max-width: 768px) {
+      .CodeMirror {
+        font-size: 13px;
+      }
+
+      .btn {
+        width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <textarea id="code"></textarea>
+
+  <div class="buttons">
+    <button class="btn" onclick="copyCode()">Copy Code</button>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/javascript/javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/htmlmixed/htmlmixed.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/css/css.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/python/python.min.js"></script>
+
+  <script>
+    const textarea = document.getElementById('code');
+    const editor = CodeMirror.fromTextArea(textarea, {
+      mode: null,
+      theme: 'dracula',
+      lineNumbers: true,
+      lineWrapping: true,
+      indentUnit: 2,
+      tabSize: 2,
+      indentWithTabs: true,
+      autofocus: true
+    });
+
+    let currentMode = null;
+
+    function detectLanguage(code) {
+      const firstLine = code.trim().split('\n')[0].toLowerCase();
+      if (firstLine.startsWith('_js')) return 'javascript';
+      if (firstLine.startsWith('_html')) return 'htmlmixed';
+      if (firstLine.startsWith('_css')) return 'css';
+      if (firstLine.startsWith('_python')) return 'python';
+      return null;
+    }
+
+    editor.on('change', () => {
+      const content = editor.getValue();
+      const lang = detectLanguage(content);
+      if (lang && lang !== currentMode) {
+        currentMode = lang;
+        editor.setOption('mode', lang);
+      } else if (!lang) {
+        editor.setOption('mode', null);
+        currentMode = null;
+      }
+    });
+
+    function copyCode() {
+      const code = editor.getValue();
+      navigator.clipboard.writeText(code).then(() => {
+        alert('Code copied to clipboard!');
+      });
+    }
+  </script>
+</body>
+</html>
