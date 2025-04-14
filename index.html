@@ -93,30 +93,20 @@
     let currentMode = null;
 
     function detectLanguage(code) {
-      const firstLine = code.trim().split('\n')[0].toLowerCase();
-      if (firstLine.startsWith('_js')) return 'javascript';
-      if (firstLine.startsWith('_html')) return 'htmlmixed';
-      if (firstLine.startsWith('_css')) return 'css';
-      if (firstLine.startsWith('_python')) return 'python';
       return 'javascript';
     }
 
     editor.on('change', () => {
       const content = editor.getValue();
       const lang = detectLanguage(content);
-      if (lang && lang !== currentMode) {
-        currentMode = lang;
-        editor.setOption('mode', lang);
-      } else if (!lang) {
-        editor.setOption('mode', null);
-        currentMode = null;
-      }
+        currentMode = 'javascript';
+        editor.setOption('mode', 'javascript');
     });
 
     function copyCode() {
       const code = editor.getValue();
       navigator.clipboard.writeText(code).then(() => {
-        alert('Code copied to clipboard!');
+        alert('Successfully copied');
       });
     }
   </script>
