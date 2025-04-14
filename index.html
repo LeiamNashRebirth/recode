@@ -98,7 +98,7 @@
       if (firstLine.startsWith('_html')) return 'htmlmixed';
       if (firstLine.startsWith('_css')) return 'css';
       if (firstLine.startsWith('_python')) return 'python';
-      return null;
+      return 'javascript';
     }
 
     editor.on('change', () => {
